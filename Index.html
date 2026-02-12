@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Theatre Experience</title>
+
+<style>
+
+body{
+margin:0;
+background:black;
+color:white;
+font-family:'Segoe UI',sans-serif;
+overflow:hidden;
+}
+
+/* ===== CINEMATIC INTRO ===== */
+#intro{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:black;
+z-index:20;
+animation:fadeIn 2s;
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+#movieTitle{
+font-size:40px;
+letter-spacing:4px;
+margin-bottom:20px;
+animation:titleGlow 2s infinite alternate;
+}
+
+@keyframes titleGlow{
+from{text-shadow:0 0 10px pink;}
+to{text-shadow:0 0 30px hotpink;}
+}
+
+input{
+padding:15px;
+font-size:18px;
+border-radius:10px;
+border:none;
+text-align:center;
+}
+
+button{
+margin-top:20px;
+padding:15px 30px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:#ff4d6d;
+color:white;
+cursor:pointer;
+}
+
+/* ===== SLIDESHOW ===== */
+#slideshow{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background-size:cover;
+background-position:center;
+transition:background-image 2s ease-in-out;
+animation:zoom 10s infinite alternate;
+}
+
+@keyframes zoom{
+from{transform:scale(1);}
+to{transform:scale(1.15);}
+}
+
+/* ===== NAME TEXT ===== */
+#nameText{
+position:absolute;
+top:40%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:42px;
+text-shadow:0 0 25px pink;
+z-index:5;
+}
+
+/* ===== QUOTE ===== */
+#quoteText{
+position:absolute;
+top:55%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:24px;
+max-width:80%;
+text-align:center;
+color:#ffd1dc;
+opacity:0;
+transition:opacity 3s;
+z-index:5;
+}
+
+/* ===== HEARTS ===== */
+.heart{
+position:absolute;
+color:pink;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0;}
+100%{transform:translateY(-10vh);opacity:1;}
+}
+
+/* ===== ROSE PETALS ===== */
+.petal{
+position:absolute;
+color:#ff7aa2;
+font-size:20px;
+animation:fall 7s linear infinite;
+}
+
+@keyframes fall{
+0%{transform:translateY(-10vh) rotate(0deg);}
+100%{transform:translateY(100vh) rotate(360deg);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+<div id="movieTitle">❤️ FAMILY LOVE STORY ❤️</div>
+<h2>Enter Your Name</h2>
+<input id="nameInput">
+<button onclick="startExperience()">Start Movie</button>
+</div>
+
+<div id="slideshow"></div>
+<div id="nameText"></div>
+<div id="quoteText"></div>
+
+<audio id="bgMusic" loop></audio>
+
+<script>
+
+/* ===== FAMILY DATA ===== */
+
+const familyData = {
+
+premnath:{
+music:"premnath.mp3",
+quote:"You are the heartbeat that holds this family together ❤️",
+images:["Premnath.JPEG","Premnath2.JPEG","Premnath3.JPEG","Premnath4.JPEG","Premnath5.JPEG","Premnath6.JPEG"]
+},
+
+kiruba:{
+music:"kiruba.mp3",
+quote:"You are the love that makes my world beautiful every day ❤️",
+images:["kiruba1.jpeg","kiruba2.jpeg","kiruba3.jpeg","kiruba4.jpeg","kiruba5.jpeg","kiruba6.jpeg"]
+},
+
+dundu:{
+music:"dundu.mp3",
+quote:"You are our little miracle, our forever happiness ❤️",
+images:["dundu1.jpeg","dundu2.jpeg","dundu3.jpeg","dundu4.jpeg","dundu5.jpeg","dundu6.jpeg"]
+},
+
+malar:{
+music:"malar.mp3",
+quote:"Your love is my first home and forever strength ❤️",
+images:["malar1.jpeg","malar2.jpeg","malar3.jpeg","malar4.jpeg","malar5.jpeg","malar6.jpeg"]
+},
+
+elamaran:{
+music:"elamaran.mp3",
+quote:"Your guidance is the path that shaped my life ❤️",
+images:["elamaran1.jpeg","elamaran2.jpeg","elamaran3.jpeg","elamaran4.jpeg","elamaran5.jpeg","elamaran6.jpeg"]
+}
+
+};
+
+/* ===== START MOVIE EXPERIENCE ===== */
+
+function startExperience(){
+
+const name=document.getElementById("nameInput").value.toLowerCase();
+const data=familyData[name];
+
+if(!data){
+alert("Name not found ❤️");
+return;
+}
+
+document.getElementById("intro").style.display="none";
+
+/* MUSIC FADE IN */
+const audio=document.getElementById("bgMusic");
+audio.src=data.music;
+audio.volume=0;
+audio.play();
+
+let vol=0;
+let fade=setInterval(()=>{
+if(vol<1){
+vol+=0.05;
+audio.volume=vol;
+}
+},200);
+
+/* TYPEWRITER NAME */
+const displayName=name.charAt(0).toUpperCase()+name.slice(1);
+typeWriter("Welcome "+displayName, "nameText");
+
+/* QUOTE DELAY REVEAL */
+setTimeout(()=>{
+document.getElementById("quoteText").innerHTML=data.quote;
+document.getElementById("quoteText").style.opacity=1;
+},3000);
+
+/* SLIDESHOW */
+let index=0;
+const slideDiv=document.getElementById("slideshow");
+
+function changeSlide(){
+slideDiv.style.backgroundImage=`url(${data.images[index]})`;
+index=(index+1)%data.images.length;
+}
+
+changeSlide();
+setInterval(changeSlide,5000);
+
+/* PARTICLES */
+setInterval(createHeart,400);
+setInterval(createPetal,700);
+
+}
+
+/* ===== TYPEWRITER ===== */
+function typeWriter(text, elementId){
+let i=0;
+function typing(){
+if(i<text.length){
+document.getElementById(elementId).innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,60);
+}
+}
+typing();
+}
+
+/* HEARTS */
+function createHeart(){
+const heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=Math.random()*20+20+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),6000);
+}
+
+/* ROSE PETALS */
+function createPetal(){
+const petal=document.createElement("div");
+petal.className="petal";
+petal.innerHTML="🌹";
+petal.style.left=Math.random()*100+"vw";
+document.body.appendChild(petal);
+setTimeout(()=>petal.remove(),7000);
+}
+
+</script>
+
+</body>
+</html>
