@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Surprise</title>
+
+<style>
+body{
+margin:0;
+font-family: 'Segoe UI', sans-serif;
+background:black;
+color:white;
+overflow:hidden;
+}
+
+/* Intro Page */
+#intro{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:black;
+z-index:10;
+}
+
+input{
+padding:15px;
+font-size:18px;
+border-radius:10px;
+border:none;
+margin-top:20px;
+text-align:center;
+}
+
+button{
+padding:15px 30px;
+font-size:18px;
+border:none;
+border-radius:10px;
+margin-top:20px;
+cursor:pointer;
+background:#ff4d6d;
+color:white;
+}
+
+/* Slideshow */
+#slideshow{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background-size:cover;
+background-position:center;
+animation:zoom 8s infinite alternate;
+transition:background-image 1.5s ease-in-out;
+}
+
+/* Message Overlay */
+#overlayText{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:40px;
+text-shadow:0 0 20px pink;
+text-align:center;
+z-index:5;
+}
+
+/* Zoom effect */
+@keyframes zoom{
+from{transform:scale(1);}
+to{transform:scale(1.1);}
+}
+
+/* Floating Hearts */
+.heart{
+position:absolute;
+color:pink;
+font-size:25px;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0;}
+100%{transform:translateY(-10vh);opacity:1;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="intro">
+<h1>What is your name? ❤️</h1>
+<input id="nameInput" placeholder="Enter your name">
+<button onclick="startExperience()">Enter</button>
+</div>
+
+<div id="slideshow"></div>
+<div id="overlayText"></div>
+
+<audio id="bgMusic" loop></audio>
+
+<script>
+
+/* DATA CONFIG */
+const familyData = {
+
+elamaran:{
+music:"elamaran.mp3",
+images:[
+"elamaran1.jpeg",
+"elamaran2.jpeg",
+"elamaran3.jpeg",
+"elamaran4.jpeg",
+"elamaran5.jpeg",
+"elamaran6.jpeg"
+]
+},
+
+malar:{
+music:"malar.mp3",
+images:[
+"malar1.jpeg",
+"malar2.jpeg",
+"malar3.jpeg",
+"malar4.jpeg",
+"malar5.jpeg",
+"malar6.jpeg"
+]
+},
+
+premnath:{
+music:"premnath.mp3",
+images:[
+"Premnath.JPEG",
+"Premnath2.JPEG",
+"Premnath3.JPEG",
+"Premnath4.JPEG",
+"Premnath5.JPEG",
+"Premnath6.JPEG"
+]
+},
+
+kiruba:{
+music:"kiruba.mp3",
+images:[
+"kiruba1.jpeg",
+"kiruba2.jpeg",
+"kiruba3.jpeg",
+"kiruba4.jpeg",
+"kiruba5.jpeg",
+"kiruba6.jpeg"
+]
+},
+
+dundu:{
+music:"dundu.mp3",
+images:[
+"dundu1.jpeg",
+"dundu2.jpeg",
+"dundu3.jpeg",
+"dundu4.jpeg",
+"dundu5.jpeg",
+"dundu6.jpeg"
+]
+}
+
+};
+
+/* START EXPERIENCE */
+function startExperience(){
+
+const name = document.getElementById("nameInput").value.toLowerCase();
+const data = familyData[name];
+
+if(!data){
+alert("Name not found ❤️");
+return;
+}
+
+document.getElementById("intro").style.display="none";
+
+/* Play Music */
+const audio = document.getElementById("bgMusic");
+audio.src = data.music;
+audio.play();
+
+/* Text */
+document.getElementById("overlayText").innerHTML =
+"Welcome " + name.charAt(0).toUpperCase() + name.slice(1) + " ❤️";
+
+/* Slideshow */
+let index=0;
+const slideDiv = document.getElementById("slideshow");
+
+function changeSlide(){
+slideDiv.style.backgroundImage = `url(${data.images[index]})`;
+index = (index+1) % data.images.length;
+}
+
+changeSlide();
+setInterval(changeSlide,4000);
+
+/* Floating Hearts */
+setInterval(createHeart,300);
+
+}
+
+/* HEART ANIMATION */
+function createHeart(){
+const heart = document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=Math.random()*20+20+"px";
+document.body.appendChild(heart);
+
+setTimeout(()=>{
+heart.remove();
+},6000);
+}
+
+</script>
+
+</body>
+</html>
