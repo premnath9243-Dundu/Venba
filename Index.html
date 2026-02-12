@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Family Blockbuster ❤️</title>
+
+<style>
+
+html,body{
+margin:0;
+height:100%;
+overflow:hidden;
+font-family:'Segoe UI';
+background:black;
+color:white;
+}
+
+/* ===== STAR BACKGROUND ===== */
+.stars{
+position:fixed;
+width:100%;
+height:100%;
+background:url('https://www.transparenttextures.com/patterns/stardust.png');
+z-index:-3;
+animation:starsMove 50s linear infinite;
+}
+
+@keyframes starsMove{
+from{background-position:0 0;}
+to{background-position:1000px 1000px;}
+}
+
+/* ===== CINEMATIC INTRO ===== */
+#intro{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:40px;
+background:black;
+z-index:10;
+animation:fadeOut 5s forwards 4s;
+}
+
+@keyframes fadeOut{
+to{opacity:0;visibility:hidden;}
+}
+
+/* ===== COUNTDOWN ===== */
+#countdown{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:80px;
+z-index:9;
+}
+
+/* ===== NAME SCREEN ===== */
+#nameScreen{
+position:fixed;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+}
+
+input{
+padding:15px;
+font-size:18px;
+border-radius:10px;
+border:none;
+margin:15px;
+}
+
+button{
+padding:12px 30px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:#ff4081;
+color:white;
+cursor:pointer;
+}
+
+/* ===== SLIDESHOW ===== */
+.slideshow{
+position:fixed;
+width:100vw;
+height:100vh;
+z-index:-2;
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+object-fit:cover;
+opacity:0;
+transform:scale(1.2);
+transition:opacity 2s, transform 6s;
+}
+
+.slide.active{
+opacity:1;
+transform:scale(1);
+}
+
+/* Overlay */
+.overlay{
+position:fixed;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+z-index:-1;
+}
+
+/* Welcome Text */
+#welcome{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+font-size:42px;
+text-align:center;
+display:none;
+animation:fadeIn 2s;
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+/* Hearts */
+.heart{
+position:fixed;
+bottom:-20px;
+color:pink;
+animation:float 6s linear infinite;
+}
+
+@keyframes float{
+100%{transform:translateY(-110vh);}
+}
+
+/* Petals */
+.petal{
+position:fixed;
+top:-20px;
+font-size:20px;
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+100%{transform:translateY(110vh) rotate(360deg);}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<div id="intro">Presenting… Our Family Love Story ❤️</div>
+<div id="countdown"></div>
+
+<div id="nameScreen">
+<h1>Enter Your Name ❤️</h1>
+<input id="username">
+<button onclick="startExperience()">Enter</button>
+</div>
+
+<div class="slideshow" id="slideshow"></div>
+<div class="overlay"></div>
+<div id="welcome"></div>
+
+<audio id="music" loop></audio>
+
+<script>
+
+/* ===== COUNTDOWN ===== */
+let count=3;
+const countdown=document.getElementById("countdown");
+
+let timer=setInterval(()=>{
+countdown.innerHTML=count;
+count--;
+if(count<0){
+countdown.style.display="none";
+clearInterval(timer);
+}
+},1000);
+
+/* ===== FAMILY DATA ===== */
+const familyData={
+
+elamaran:{
+message:"You are the pillar of our family ❤️",
+photos:["elamaran1.jpeg","elamaran2.jpeg","elamaran3.jpeg","elamaran4.jpeg","elamaran5.jpeg","elamaran6.jpeg"],
+music:"elamaran.mp3"
+},
+
+malar:{
+message:"Your care binds us together ❤️",
+photos:["malar1.jpeg","malar2.jpeg","malar3.jpeg","malar4.jpeg","malar5.jpeg","malar6.jpeg"],
+music:"malar.mp3"
+},
+
+premnath:{
+message:"You are the heartbeat of this love story ❤️",
+photos:["premnath1.jpeg","premnath2.jpeg","premnath3.jpeg","premnath4.jpeg","premnath5.jpeg","premnath6.jpeg"],
+music:"premnath.mp3"
+},
+
+kiruba:{
+message:"Your smile is our happiness ❤️",
+photos:["kiruba1.jpeg","kiruba2.jpeg","kiruba3.jpeg","kiruba4.jpeg","kiruba5.jpeg","kiruba6.jpeg"],
+music:"kiruba.mp3"
+},
+
+dundu:{
+message:"Our little bundle of joy ❤️",
+photos:["dundu1.jpeg","dundu2.jpeg","dundu3.jpeg","dundu4.jpeg","dundu5.jpeg","dundu6.jpeg"],
+music:"dundu.mp3"
+}
+
+};
+
+function startExperience(){
+
+let name=document.getElementById("username").value.toLowerCase();
+
+if(!familyData[name]){
+alert("Name not found ❤️");
+return;
+}
+
+document.getElementById("nameScreen").style.display="none";
+
+let data=familyData[name];
+
+/* Welcome Message */
+let welcome=document.getElementById("welcome");
+welcome.innerHTML="Welcome "+name.toUpperCase()+" ❤️<br>"+data.message;
+welcome.style.display="block";
+
+/* Slideshow */
+let slideshow=document.getElementById("slideshow");
+
+data.photos.forEach((photo,i)=>{
+let img=document.createElement("img");
+img.src=photo;
+img.className="slide";
+if(i===0) img.classList.add("active");
+slideshow.appendChild(img);
+});
+
+let slides=document.querySelectorAll(".slide");
+let index=0;
+
+setInterval(()=>{
+slides[index].classList.remove("active");
+index=(index+1)%slides.length;
+slides[index].classList.add("active");
+},5000);
+
+/* Music */
+let music=document.getElementById("music");
+music.src=data.music;
+music.play();
+
+/* Effects */
+startHearts();
+startPetals();
+startFireworks();
+}
+
+/* Hearts */
+function startHearts(){
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="❤️";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),6000);
+},400);
+}
+
+/* Petals */
+function startPetals(){
+setInterval(()=>{
+let p=document.createElement("div");
+p.className="petal";
+p.innerHTML="🌹";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(Math.random()*5+5)+"s";
+document.body.appendChild(p);
+setTimeout(()=>p.remove(),8000);
+},500);
+}
+
+/* Fireworks */
+function startFireworks(){
+for(let i=0;i<50;i++){
+let f=document.createElement("div");
+f.innerHTML="✨";
+f.style.position="fixed";
+f.style.left=Math.random()*100+"vw";
+f.style.top=Math.random()*100+"vh";
+f.style.fontSize="25px";
+document.body.appendChild(f);
+setTimeout(()=>f.remove(),2000);
+}
+}
+
+</script>
+</body>
+</html>
